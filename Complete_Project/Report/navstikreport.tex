@@ -1,0 +1,361 @@
+
+\documentclass[12pt]{article}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=blue
+}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\graphicspath{ {/media/dhruv/A242292C4229069F/DC/acads/Navstik/} }
+\usepackage{amsmath}
+\usepackage{relsize}
+\begin{document}
+\pagenumbering{gobble}
+~\\ ~\\ ~\\ ~\\ ~\\ ~\\ ~\\ ~\\ ~\\ ~\\
+\rule[0.5ex]{\linewidth}{1pt}
+\begin{center}
+\fontsize{30}{36}
+\textbf{Summer Internship Project Report}
+\\ ~\\
+\end{center}
+\rule[0.5ex]{\linewidth}{1pt}
+\\ ~\\ ~\\ ~\\ ~\\
+\begin{center}
+\fontsize{30}{36}
+\textbf{By: Dhruv Jain}
+\end{center}
+\begin{center}
+\fontsize{18}{22}\selectfont
+ May-July 2014
+\end{center}
+\begin{center}
+\fontsize{30}{36}\selectfont
+Directed By: \textbf{Dr. Nitin Gupta}
+\end{center}
+\begin{center}
+\fontsize{30}{36}\selectfont
+at NavStik Autonomous System,Pune
+\end{center}
+\newpage
+\pagenumbering{arabic}
+\tableofcontents
+\clearpage
+\section{The Internship}
+\subsection{Acknowledgements}
+\par I would like to express my highest appreciation to Dr. Nitin Gupta, my
+project advisor, for his invaluable guidance, excellent support and availability at all times throughout internship. This work could never be completed without his
+contributions, comments and reviews.\newline \par
+I would also like to thank Mr. Pradeep Gaidhani and Mr. Vallabh G, for their valuable help and support regarding technical aspects of my project.\newline \par
+My heartfelt thanks go to my beloved ones and my friends and other colleagues at Company for their continuous love and moral support.
+\subsection{NavStik}
+NavStik is a small group of engineers and researchers with background in electronics, computers, robotics, and aerospace-systems. We are excited about helping other researchers and DIY folks get started with implementing their automation algorithms for mobile robotics quickly and efficiently. We are continuously working on making recent developments in technology more accessible, thereby assisting in development of advanced systems for a variety of applications.\par
+NavStik is a Micro Navigation and Control Board, designed for use in a variety of Autonomous Mobile Robots. It provides access to accelerometers, gyroscopes, magnetometers, pressure sensor, air-speed sensor and GPS. It can easily be interfaced to additional sensors, if required. NavStik is one of the smallest and lightest such modules available today.For more details visit \url {navstik.org}
+\subsection{My Curriculum}
+I am undergoing my B.Tech. + M.Tech. (dual degree) in Computer Science and Engineering at Indian Institute Of Technology Kharagpur.I have completed my 2nd Year in April 2014.During May-July 2014 I was doing my internship at NavStik.\newpage
+\section{Introduction}
+This project presents a system where Unmanned Autonomous Vehicles (UAVs)'s flying data called telemetry data which comprises of 259 parameters like roll,pitch,yaw ,FPE, GPS, acceleration and so on, and the video stream from UAV can be sent over IP.So telemetry link and VideoDownlink can be established over network assuming sufficient bandwidth is available.We can use 3G/4G or wifi connection to do so.\newline
+The project explains how the much demanded objective of establishing wireless link from UAV to ground can be established.
+
+\subsection{General Problem and Current situation}
+Currently when UAV flies,to get the telemetry data from UAV to the ground we use pair of Zigbees to establish wireless radio link.Obviously we have the disadvantages like:
+
+\begin{enumerate}
+\item Low range: upto 100 meters maximum.
+\item Since we have pairs of Zigbees we have a standalone Ground Control Station where data can be transferred.
+\item The bandwidth offered by Zigbee is around 250 kbit/s which is unsufficient for the transmission of video.
+\end{enumerate} 
+So to address these problems has been a topic of concern.So this project come up with an architecture where the problems we face now can be dealt with.
+
+\subsection{Objective and Scope of the Project}
+The area of interest for this project is establishing {\bf telemetry link and Video Downlink over internet(3G/4G) } and make it available to several viewers on the ground.
+\newline
+We developed an architecture for onboard on UAV and for ground control station so that our problem can be addressed.It has several applications like long-distance viewing and monitoring.Since all the data are being transferred over internet we may expect that we have serveral UAVs flying at places several distances apart from ground and we at ground are able to have a link with the UAV.
+\subsection{Basic Approach and Final Picture}
+\subsubsection{Telemetry Link from UAV}
+To establish telemetry link from UAV,on {\bf Hardware side} we have our autopilot named navstik which carries all the data encoded in it, we have a single board computer Odroid-u3.Odroid is connected to Navstik via USB cable.Navstik has a program which enable it to send the data to some particular port which can be accessed via on odroid-u3.
+\newline 
+{\bf On Software part},\newline\newline {\bf Source or UAV} runs a code on odroid which access the serial data from Navstik and send that via UDP to the server.
+\newline\newline
+{\bf Server} handles those UDP packets from several sources and keep their record.
+\newline\newline
+{\bf Client} uses QGroundControl Software where he can select the UAV data he wants to get and depending upon authentication QGCS receives UDP packets of corresponding UAV from the server.
+\newline\newline
+We have multiple UAVs and multiple clients connected to some UAV.We have used socket programming on a core part at all ends i.e. source, server and client.Refer \cite{1} and \cite{2} for more details on socket programming.
+\newline
+\subsubsection{Video Stream from UAV}
+To establish Video Downlink ,on {\bf Hardware Side} we have a usb cam mounted on UAV connected to odroid via USB cable.So odroid can access the camera and get its feed.
+\newline\newline
+{\bf Software Details:}
+\newline\newline
+{\bf On Source} we have a program that sends the video packets by accessing camera to the server.\newline\newline
+{\bf Server} receives video stream from various sources.Server in turn streams the video and any client who have access to the url which comprises of server'ip ip and specific name of corresponding video stream can view the video stream.\newline\newline
+{\bf Client} in this case has Web interface where we have a specific login for authentication and buttons corresponding to every active UAV clicking on which starts the video stream.\newline\newline
+We have used VLC and VLM for managing video streams on source and server side.
+So as a final picture we have several sources sending video streams to the server.Server in turn streaming those streams.User on ground logs in and get the video stream.
+
+\section{Literature Review}
+The concept of getting telemetry link and video stream from UAV to ground is not new.It has been a topic of interest for various researchers.\newline A group named skydrone \cite{5} has been involved in the development of UAVs to achieve the same objective.Their main focus is video transmission over cellular IP.Their system allows first person view only i.e. they doesn't allow user to control UAV, moreover it is one to one or many to one architecture not many to many.\newline\par
+There are several groups focussing on establishing telemetry link and video stream over IP especially using 3G/4G like that of \cite{6}.Again they talk more about one to one communication over IP.\newline\par
+Many methods have been implemented for video streaming like those using image processing at both source and client which are not reliable.Moreover there have been methods like mjpeg-streamer but even for direct communication from source to client, there is latency of about 1-2 sec and packet loss. \newline\newline\par
+The basic methodology of this project also relies on known problems or previously done work but it addresses the problems not been addressed so far.By the end of this project, we are able to establish many to many communication and allow user to monitor flight at great distances.The user would be able to view low latency ,live video feed of every UAV and can get the telemetry data too.
+\section{Methodology,Design and architecture}
+We follow a 3-tier architecture for both establishing telemetry link and video stream from UAV.We have sources, server and clients.
+\vspace*{10px}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=120mm]{second}
+\caption{3-tier Architecture}
+\label{overflow}
+\end{figure}
+
+\vspace*{50px}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=120mm]{first}
+\caption{Final picture}
+\label{overflow}
+\end{figure}
+\newpage
+
+\subsection{Telemetry Link from UAV}
+Here we would discuss in detail the implementation on each side i.e autopilot,odroid-u3, server and client.\newline
+\newline
+{\bf Implementation on autopilot: Navstik}\newline
+A program runs on autopilot which when connected to odroid-U3 on board via USB cable
+sends mavlink packets to the connected serial port. So we get serial data at that port. The incoming serail data can be checked by executing the following command:\newline
+\begin{center}
+\textit{sudo minicom -D /dev/ttyACM0 -b 115200}
+\end{center}
+where, /dev/ttyACM0 is the serial path, 115200 is the budrate for the telemetry data,
+\newline
+which results in some junk sort of serial data , which is actually mavlink packets to be seen in the console of odroid-u3 terminal display.\newline
+Since odroid-u3 has linux operating system(arm based), so for testing purposes we can also use any linux PC.Odroid-U3 also behaves in a similar way as any other linux PC, but may have different processing speed of programs as compared to normal linux PC.\newline\newline
+{\bf Implementation on Odroid-U3}\newline\newline
+Here we run the main program that basically performs the task of receiving mavlink message through serial port and sending those messages via UDP to the server.\newline
+We have devised two ways to do so:
+\begin{enumerate}
+\item We have a C code ( commtoserver.c ) which does the following:
+\subitem $\bullet$ Opens the serial port and activates it to access the serial data over specified serial path like /dev/ttyACM0.
+\subitem $\bullet$ Sends some handshaking request to the server so that server receives the address of the source.
+\subitem $\bullet$ Runs two threads :
+\subitem $\bullet$ In the first thread it forwards serial data over UDP to the specified server's  IP.
+\subitem $\bullet$ In the second it receives UDP packets from server , convert it into mavlink format and forward it to serial port, like it can set waypoints, change some parameters etc.
+\item {\bf Using Mavproxy:} It is a command line based ground control station.More Information can be found at \cite{3}.It can be installed on a linux system by executing following commands:\newline
+\newline
+\textit{sudo apt-get update}\newline
+\textit{sudo apt-get install screen python-wxgtk2.8 python-matplotlib python-opencv python-pip python-numpy}\newline
+\textit{sudo pip install mavproxy}\newline\newline
+It has a feature which allows us to connect our mav with many ground control stations over IP via UDP by sepecifying the port
+UAV is communicating upon and the output port where mavlink messages are to be sent. Through Mavproxy data can be sent to multiple GCS and can communicate with multiple UAVs.\newline
+So we use mavproxy on Odroid-U3 in the following way:
+\subitem $\bullet$ Source sends server first handshake message.
+\subitem $\bullet$ It then receives the port at which server would listen to its data like 1234 for 1st UAV, 1235 for 2nd and so on.
+\subitem $\bullet$ It then runs the mavproxy through command as:\newline\newline
+\hspace*{-50px}\textit {sudo mavproxy.py  - -master=/dev/ttyACM0  - -baud=57600  - -out server's IP:1234 }\newline\newline
+In the above command --master is used for specifying the port UAV is communicating upon --out specifies the output port which in above case is the server's IP
+\end{enumerate} 
+{\bf Implementation at Server}
+Server's main task is to be able to get the telemetry data from several UAVs and then sending it to any specific client.We again have come up with two approaches as follows:
+\begin{enumerate}
+\item Here server receives continuous telemetry data and stores them in a string array where each string stores the data of every UAV.On request by client it sends the data of corresponding UAV to the client.
+So we have a code to do so.But it has some issues which would be discussed later.
+\item {\bf Server Uses Mavproxy}. Here server firstly sends the port at which UAV should send the continuous data stream, then server gets to know at which port it is getting data stream of which UAV.Then server on request by client runs mavproxy with input/source as input network stream and output as client's address.The basic flow which follows is :\newpage
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=140mm,height=150mm]{flowchart}
+\caption{Flow for Telemetry link}
+\label{overflow}
+\end{figure}
+It also has some issues to be discussed later.
+\end{enumerate}
+\newpage
+{\bf Implementation at Client}
+\newline Client here possess QGroundControl Software.It is an open source project.It has an option to receive/send UDP packet of mavlink data.So selecting this option would led QGCS to view telemetry data and also send messages via UDP to the server which in turn send it to the corresponding UAV.\newline Moreover we have provided a login for the users where users login and authenticated users gets the number of UAVs selecting which gives user access to data of corresponding UAV.The UI for the QgroundControl Software looks like:\newline
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=120mm]{QGCS1}
+\caption{QgroundControl Initial Interface}
+\label{overflow}
+\end{figure}
+\newpage
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=120mm,height=80mm]{QGCS2}
+\caption{QgroundControl Telemetry View UI}
+\label{overflow}
+\end{figure}
+
+
+\subsection{Video Downlink from UAV}
+For video Odroid mounted on every UAV is attached to a USB camera.The setup looks like this:
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=60mm,height=40mm]{usbcam}
+\caption{Setup on UAV}
+\label{overflow}
+\end{figure}
+\newpage
+\subsubsection{Implementation On UAV}
+We run a program on odroid which does the following:
+ 
+\begin{enumerate}
+\item Send handshaking message to the server so that server knows the IP address of the UAV.
+\item Source then starts VLC streaming.VLC provides a way so that video from any device attached to the system can be streamed.We can access the stream by knowing the IP address and port number of the stream.More details can be found at \cite{4}.So we first install VLC on odroid by writing the command:
+\begin{center}
+\textit{sudo apt-get install vlc}
+\end{center}
+The command for starting video stream is: \newline\newline
+\textit{cvlc v4l2:// :v4l2-vdev="/dev/video0" --sout '\# transcode{vcodec=mp4v,
+acodec=mpga,vb=800,ab=128,fps=29.97,width=640,height=480}:standard  {access=http,mux=asf,dst=:8080}' --no-sout-audio}
+
+Here, Different kind of processing are applied to the stream during this process (transcoding, re-scaling, filters, re-muxing...).\newline\newline
+{\bf \small Transcode: } This module is used to transcode a stream, i.e. to change its codecs or the encoding bitrates. Some additional processing can be done during this process, such as re-scaling, deinterlacing, resampling, etc.\newline\newline
+{\bf {\small vcodec: }}This options allows to specify the codec the video tracks of the input stream should be transcoded to.We have several codecs available like MJPEG,MPEG,mp4v,AVI,WMV,H.264 and many more.Here we have used mp4v or mpeg-4 for its greater compatibility with http streaming.\newline\newline
+{\bf \small vb: }This option allows to set the bitrate of the transcoded video stream, in kbit/s.It depends which type of connection we are using.For Wifi connection it is recommended that for a resolution of 640X480 use bandwidth of 600-850 kb/s.For cellular connection, we should use a bandwidth of 200kb/s for resolution of 400X300.\newline\newline
+{\bf \small fps: }This options allows to set the framerate of the transcoded video, in frames per second; reducing the framerate of a video can help decrease its bitrate.\newline\newline
+{\bf \small dst: }This option allows to give informations about the location where the stream should actually be saved or sent.\newline
+Here is the meaning of the dst option depending on the parameter used for the access option.\newline\newline
+{\bf \small Streaming Protocol: } Several protocols are available like RTP/UDP,RTSP,
+\newline HTTP,MMSH,File.\newline The RTSP (Real Time Streaming Protocol) protocol is a client-server multimedia presentation control protocol, designed to address the needs for efficient delivery of streamed multimedia over IP networks.\newline Here We have used HTTP. HTTP stands for HyperText Transport Procotol. It's a application network layer developed in early days of Internet for transmit html and text files. Today it's used for every kind of media, thanks to it's flexibility. VideoLAN can use this protocol for multimedia streaming. It can read a stream from an HTTP server like Apache, or act like a HTTP server dumping multimedia to the network.\newline\newline
+{\bf \small Mux:}This option allows you to set the encapsulation method used for the resulting stream. This option has to be set.Available mux for http streaming are ts,ogg,asf.\newline
+\end{enumerate} 
+More details on compression, streaming protocols,congestion control,error control and other such parameters required for video streaming can be found at \cite{7}.
+\subsubsection{Implementation on the Server}
+Server for video also uses VLC (Video Lan Client) and VLM (Video Lan Manager).We have come up with the two approaches one using VLC streaming as done on the source side and other using multiple streaming using VLM configuration files.\newline
+The basic steps of execution of program (server1.cpp) which uses vlc are as follows:\newline
+\begin{enumerate}
+\item The server first waits for source to connect to the server so that it gets the IP of source.
+\item Then it runs a command in a separate thread for each UAV which streams the video of particular UAV at some port starting form 8080 for 1st UAV, 8081 for 2nd UAV and so on.
+\item Then it creates asf files for each UAV which basically contains a script having the address of network stream to play.For example, it will have a tag:\newline 
+ \textless REF HREF="https://server's IP:8080" / \textgreater \newline
+Playing a asf file in a VLC with such a tag will play the corresponding network stream.\newline So, asf files equal to number of UAVs are created on the server which is then played by client on request.\newline
+\end{enumerate}
+Now we will see the server program (server2.cpp) which uses VLM.More info on VLM can be found at \cite{9}.\newline
+\begin{enumerate}
+\item Here also server firstly listens the source so that it gets the network url at which it gets the video stream of corresponding UAV.
+\item Then it makes is a VLM configuration file (.conf file) which is a list of command lines : one line corresponds to one command line.To create a configuration file, just edit a text file and type a list of VLM commands. \newline So server creates a vlm.conf file which is dynamically edited as no. of UAVs increase.For each UAV it contains the following command lines:\newpage
+
+\centerline {\bf VLM Configuration File :} 
+ \textit {new channel1 broadcast enabled\newline
+ setup channel1 input "http://source1's ip:8080"\newline
+ setup channel1 output \# http{mux=ts,dst=:8095/live1} \newline
+ setup channel1 option http-reconnect \newline
+ setup channel1 option no-sout-rtp-sap option no-sout-standard -sap option ttl=1 option sout-keep \newline\newline
+ control channel1 play}\newline\newline
+
+The file is appended as more and more UAVs add on.Here user can access the stream of source1 by playing the network stream as http://server's ip:8095/live1.\newline
+\item Server in the same way makes .asf files for every UAV with network url as above.
+\newline
+Here one thing to note is that we have used a single port i.e 8095 in this case, to obtain the stream of every UAV.Here address also extends the information within the port itself so that we have streams of every UAV on a single port.\newpage
+\end{enumerate}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=140mm,height=150mm]{flowchart2}
+\caption{Process for Video Streaming}
+\label{overflow}
+\end{figure}
+
+
+\subsubsection{Implementation On the Client}
+Client in this case is provided with a web interface.Server provides a portal where user has to log in, and after authentication client is directed to a web page where user can access the video feed of any active UAV by clicking on button.\newline
+User first have to install suitable plugin.Information of suitable plugin is as follows:
+\begin{enumerate}
+\item {\bf For Windows User:} Reinstall VLC and while installing {\bf don't untick} VLC browser plugin for chrome or mozilla.
+
+\item {\bf For linux Users:} User must use {\bf Mozilla firefox} browser.Run the following command in the terminal:
+\newline
+\hspace*{50px}\textit{sudo apt-get install vlc browser-plugin-vlc} \newline
+\hspace*{50px}\textit{sudo apt remove totem-mozilla}\newline
+Then User can view the feed in the browser itself.User can also see the stream in the VLC media player also.Just change the preferences in mozilla by edit$\rightarrow$preferences $\rightarrow$applications.Then change action for asf video to use vlc by browsing to the executable file of vlc.\newline
+\end{enumerate} 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=120mm]{Video_web}
+\caption{Web-Interface for Users}
+\label{overflow}
+\end{figure}
+\newpage
+\section{Tests and Results}
+We successfully conducted tests for both for getting telemetry data and Video Downlink with various variations like single source vs multiple source, single client vs multiple clients and other such variations which we will discuss here.Here for the source we have used linux PCs.The results are well applicable for odroid-u3 also.\newline
+\subsection{Telemetry link Experiments}
+We conducted tests for establishing telemetry link in wifi network with following variations and methods: \newline
+\begin{enumerate}
+\item {\bf Single source and Single Client:} Here, firstly we ran C code (commtoserver.c) which transfers UDP packets to the server.Server(oneonetelemetry.c) firstly is made capable of listening to a single client on request.Then on source we ran mavproxy which does the same thing of sending UDP packets to the server, and server does the same thing.
+\newline\newline
+{\bf Result:} We got satisfactory result.Client was able to get the telemetry data in both cases(code and mavproxy).But in case of code communication is one way i.e from source to client only (not the other way).\newline
+\item {\bf Single source and Multiple Clients :}Here we used mavproxy code on the source.On server firstly we simply received UDP packets and then send those to the no. of clients on their request.Then we used Mavproxy on the server, so as to run the command to send the data to the multiple clients network ports.
+\newline\newline
+{\bf Result:}For the first case we got a warning in the QGCS : Another system is using the same system ID, but we got the telemetry data.The second case worked perfectly and each client is now capable to send and receive UDP packets via QGCS.
+\item {\bf Multiple Sources and Multiple Clients}Here on the source we used mavproxy .On the server end we again tried both methods.Firstly we used a method of receiving raw UDP message, storing them in a string and then sending to the client.\newline Then we used Mavproxy on the server.So we run several mavproxy commands equal to the no. of UAVs and send the data of UAV to the corresponding client on request.\newline\newline
+{\bf Result:}Using mavproxy at the server's end works perfectly fine.Each client is able to access and monitor the telemetry data of UAV requested.\newline
+Using the method of storing the data in a string and then sending to the specified client did'nt work in this case.We get an warning: Mavlink baud rate mismatch.We will evaluate this issue in later section.
+\end{enumerate}
+\subsection{Video Downlink Experiments}
+We conducted tests for getting video stream from different sources using following variations.
+\begin{enumerate}
+\item {\bf Single Source:} Here we run the code for starting video stream on a single linux PC.Server then streams that video.\newline
+{\bf Result: }Client is able to access the video stream by entering server's network url and clicking on UAV1.We get a delay of maximum 500 ms with almost no packet loss and jitter.\newline
+\item {\bf Multiple Sources: }Here we run the same code on 3 linux PCs.Here we test using two programs on the server discussed above(VLC and VLM).On the client side we get 3 buttons for 3 different UAVs, clicking on which gives the video feed of corresponding UAV.
+\newline
+{\bf Result:} Video feed for all UAVs can be accessed.But as compared to previous case there is latency of about 1s for all UAVs.Packet loss or jitter is almost negligible.
+\end{enumerate}
+
+\section{Evaluation and Discussion}
+The report fully describes a fully functioning system to establish telemetry link and video downlink from UAV to ground.Although We successfully conducted experiments to achieve the same and got satisfactory results,there were some issues in the current system which are discussed as follows:
+\begin{enumerate}
+\item {\bf Telemetry link} We are able to send the data form source to the server either using commtoserver.c or mavproxy, but on the server end using method of receiving UDP packets , storing them in string and sending string to the client having Qgroundcontrol doesn't work perfectly.It gives error: {\bf mavlink baud rate mismatch}.Since QGCS is designed to receive mavlink messages at a specific baud rate, the error arises.
+\item {\bf Telemetry link} As of now the method of receiving and sending UDP packets work one way i.e. server is capable of only sending UDP packets not other way.
+\item {\bf Telemetry link} Using Mavproxy on the server end works perfectly.Moreover it allows both way communication to all clients.So it creates problem of accessibility i.e. as of now every user is capable of receiving as well as sending commands to particular MAV.So multiple user can monitor the same UAV.Single User monitoring and multiple users just viewing would be more realistic.
+\item {\bf Telemetry link} As of now the server code allows a particular user to access the telemetry link of single UAV only till the server is on.In other words, any user getting the data of some UAV can't switch to get the data of some other UAV.Once the server sends the data to particular client, that client gets the data of that UAV only as long as server is on.If the user tries to switch he will get the data of both UAV on single GCS which is not reliable. 
+\item {\bf Video Downlink} The system successfully allowed us getting video stream from UAV to the ground.Server provides a web-interface to the users where it has buttons for every active UAV.But as of now there is no provision of checking if the UAV once activated has been active at some moment or not i.e. once a UAV is activated server provides a button for that UAV, which remains as long as server is on.We rather expect that once the UAV goes off button for that UAV either should not be visible or there should be indication that the UAV has been deactivated.
+\end{enumerate}
+We have conducted all the experiments over wifi.
+These are some of the issues discussed.We will try to solve the issues in the later version of our project.Some of the future work involving solving these issues are being discussed in next section.
+\section{Further Improvements}
+The major objective of the project was achieved but still in the coming future we would like to address the issues discussed above and some of the challenges are left open ended.\newline 
+\subitem $\bullet$ The server for establishing telemetry link should be designed to effectively use the methiod of receiving and sending UDP packets at correct baud rates instead of using mavproxy as it can be achieved by source sending data on a single port and will be independent of third party module - mavproxy. \newline
+
+\subitem $\bullet${\bf Mavproxy module should be modified to be capable for two way as well as one way communication from UAV to ground}, so that only one user monitors the flight set parameters, set waypoints etc. and multiple users get to only see and get the parameters.\newline
+\subitem $\bullet$ {\bf Server should allow user to also switch the UAV data they are accessing} and should not limit them to just capable of getting telemetry data of just single UAV as long as server is on.This can be done by storing the address of client and UAV data it is getting.If the same user tries to connect a check is performed and both the previous as well as new commands are changed and then run so that the user only get the data of updated UAV he requested.\newline
+\subitem $\bullet$ Another module for mavproxy named {\bf mavelous \cite{8} is available which provides web interface for getting telemetry link also}.But since mavelous lacks certain features we didn't use it in this project.But in future we would like to use mavelous module for mavproxy, so that for telemetry data also we are able to have a light weight web interface instead of using Qgroundcontrol Software.\newline
+\subitem $\bullet$ {\bf Server for video stream should  provide the information of active or disconnected UAV}.Server should kill the command for disconnected UAV.Moreover, the active UAV if disconnected should again send the video stream to the server and server should recognize it.\newline
+
+\section{Conclusion}
+An approach for establishing telemetry link and video link was discussed and implemented in this report.We presented a new and novel idea and addressed the problems in the work done previously.The whole system have been tested and the results have been quite satisfactory.Again, We are in the process of addressing the issues discussed above and making the overall system more efficient.
+\section{References}
+\begingroup
+\renewcommand{\section}[2]{}
+\begin{thebibliography}{}
+\bibitem{1}
+\url{http://www.cs.dartmouth.edu/~campbell/cs60/socketprogramming.html}
+\bibitem{2}
+Beej's Guide to Network Programming Using Internet Sockets Brian “Beej Jorgensen” Hall
+beej@beej.us
+Version 3.0.15
+July 3, 2012
+\bibitem{3}
+\url{http://tridge.github.io/MAVProxy/}
+\bibitem{4}
+\url {http://www.videolan.org/doc/streaming-howto/en/ch05.html}
+\bibitem{5}
+\url {http://www.skydrone.aero/}
+\bibitem{6}
+\url {http://diydrones.com/group/telemetry-over-cellular-ip}
+\bibitem{7}
+\url {http://users.ece.cmu.edu/~peha/streaming_video.pdf}
+\bibitem{8}
+\url {https://github.com/wiseman/mavelous}
+\bibitem{9}
+\url {http://www.videolan.org/doc/streaming-howto/en/ch05.html}
+
+\end{thebibliography}
+\endgroup
+\end{document}

@@ -1,0 +1,43 @@
+on the server side now I have urls corrsponding to every UAV.
+I will store those URLs in a filr like:
+
+1
+http://server'sip:8080
+2
+http://server's ip:8081
+
+
+and so on.
+
+now I will make i different server which stores the content in the string array like:
+
+s[0]=1;
+s[1]=http://server's ip:8080
+s[2]=2;
+s[3]=http://server's ip:8081
+
+and so on.
+
+then it will listen for cleint's request , do some authentication and send that string to the client.
+
+on that client side,
+
+he gets an array of string  ...right 
+so he reads the array and make an array of urls available and store in the array of size n/2
+
+like 
+
+arr[0]=s[1];
+arr[1]=s[3];
+
+then it will make n/2 buttons and corresponding to each button it will have action performed to play that url in the vlc media player.
+
+
+command for multiple streaming
+
+nohup cvlc -Ihttp --file-logging --log-verbose=1 --logfile="vlc.log" --vlm-conf vlm.conf & echo $! > vlc.pid
+
+
+to kill
+
+kill `cat vlc.pid`

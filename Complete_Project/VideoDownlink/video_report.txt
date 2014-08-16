@@ -1,0 +1,15 @@
+video source:(vlc_source.c)
+
+send message to the server for 1st handshake
+at port 8000
+then starts vlc streaming at port 8080.
+
+video server:(server_vlc.cpp)
+
+receives message (hand shake to know ip of source ) from source and starts streaming at port starting from 8080 for 1st source 8081 for second and so on... and stores the no of uavs.
+On server we also have a1.asx, a2.asx ... files equal to no. of uavs which carries the url to play.
+
+Video client: web based so just go the the url.
+
+
+

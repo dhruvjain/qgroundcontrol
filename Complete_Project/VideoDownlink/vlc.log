@@ -1,0 +1,58 @@
+﻿-- logger module started --
+main error: connection failed: Connection refused
+access_http error: cannot connect to 192.168.0.103:8080
+main error: connection failed: Connection refused
+access_mms error: cannot connect to 192.168.0.103:8080
+main error: open of `http://192.168.0.103:8080' failed
+main error: Your input can't be opened
+main error: VLC is unable to open the MRL 'http://192.168.0.103:8080'. Check the log for details.
+lua: Lua HTTP interface
+-- logger module stopped --
+﻿-- logger module started --
+lua: Lua HTTP interface
+access_http warning: unimplemented query in control
+main error: connection failed: Connection refused
+access_http error: cannot connect to 192.168.0.103:8080
+asf warning: cannot peek while getting new packet, EOF ?
+main warning: no more input streams for this mux
+-- logger module stopped --
+﻿-- logger module started --
+lua: Lua HTTP interface
+access_http warning: unimplemented query in control
+-- logger module stopped --
+﻿-- logger module started --
+lua: Lua HTTP interface
+access_http warning: unimplemented query in control
+-- logger module stopped --
+﻿-- logger module started --
+lua: Lua HTTP interface
+access_http warning: unimplemented query in control
+-- logger module stopped --
+﻿-- logger module started --
+lua: Lua HTTP interface
+access_http warning: unimplemented query in control
+main error: connection failed: Connection refused
+access_http error: cannot connect to 192.168.0.103:8080
+asf warning: cannot peek while getting new packet, EOF ?
+main warning: no more input streams for this mux
+main warning: force closing connections
+-- logger module stopped --
+﻿-- logger module started --
+access_http warning: unimplemented query in control
+lua: Lua HTTP interface
+main error: connection failed: Connection refused
+access_http error: cannot connect to 192.168.0.103:8080
+asf warning: cannot peek while getting new packet, EOF ?
+main warning: no more input streams for this mux
+-- logger module stopped --
+﻿-- logger module started --
+lua: Lua HTTP interface
+main error: socket bind error (Permission denied)
+main error: socket bind error (Permission denied)
+main error: cannot create socket(s) for HTTP host
+lua error: Error loading script /usr/local/lib/vlc/lua/intf/http.luac: lua/intf/http.lua:328: Failed to create HTTP host
+main error: connection failed: Connection refused
+access_http error: cannot connect to 192.168.0.112:8080
+main error: cannot pre fill buffer
+main warning: cannot create a stream_t from access
+-- logger module stopped --

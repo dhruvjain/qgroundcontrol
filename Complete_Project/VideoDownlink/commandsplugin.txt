@@ -1,0 +1,4 @@
+//sudo apt-get install mplayer
+//sudo apt-get install gecko-mediaplayer
+sudo apt-get install vlc browser-plugin-vlc
+sudo apt remove totem-mozilla

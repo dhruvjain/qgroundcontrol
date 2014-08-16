@@ -1,0 +1,18 @@
+GOAL:
+
+establishing telemetry link over internet(3G or wifi)
+
+situation: we have several uavs flying at serveral different places.We want a user to be able to access telemetry  data(monitor and control ) any available uav.
+
+SOLUTION:
+
+we developed 3 tier architecture to solve this problem 
+
+WE have a source: runs mavproxy.py to send UDP packet of the flying data to the server
+
+We have a server: receives UDP packets from sources at different ports and run mavproxy to send the data of corresponding uav to the specifoed client.
+
+We have client:
+Client uses Qgroundcontrol software.It has login for the user.On authentication User gets no of uavs available , then user selects the uav whose data he wants and get the corresponding data from the server.
+
+

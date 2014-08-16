@@ -1,0 +1,12 @@
+new channel1 broadcast enabled
+setup channel1 input "http://192.168.0.112:8080"
+setup channel1 output #http{mux=ts,dst=:8090/live1}
+setup channel1 option http-reconnect
+setup channel1 option no-sout-rtp-sap option no-sout-standard-sap option ttl=1 option sout-keep
+
+new channel2 broadcast enabled
+setup channel2 input "http://192.168.0.112:8080"
+setup channel2 output #http{mux=ts,dst=:8090/live2}
+setup channel2 option http-reconnect
+setup channel2 option no-sout-rtp-sap option no-sout-standard-sap option ttl=1 option sout-keep
+

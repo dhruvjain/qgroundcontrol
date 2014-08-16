@@ -1,0 +1,24 @@
+\contentsline {section}{\numberline {1}The Internship}{2}{section.1}
+\contentsline {subsection}{\numberline {1.1}Acknowledgements}{2}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}NavStik}{2}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}My Curriculum}{2}{subsection.1.3}
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}General Problem and Current situation}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Objective and Scope of the Project}{3}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Basic Approach and Final Picture}{4}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Telemetry Link from UAV}{4}{subsubsection.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Video Stream from UAV}{4}{subsubsection.2.3.2}
+\contentsline {section}{\numberline {3}Literature Review}{5}{section.3}
+\contentsline {section}{\numberline {4}Methodology,Design and architecture}{6}{section.4}
+\contentsline {subsection}{\numberline {4.1}Telemetry Link from UAV}{7}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Video Downlink from UAV}{12}{subsection.4.2}
+\contentsline {subsubsection}{\numberline {4.2.1}Implementation On UAV}{13}{subsubsection.4.2.1}
+\contentsline {subsubsection}{\numberline {4.2.2}Implementation on the Server}{14}{subsubsection.4.2.2}
+\contentsline {subsubsection}{\numberline {4.2.3}Implementation On the Client}{17}{subsubsection.4.2.3}
+\contentsline {section}{\numberline {5}Tests and Results}{19}{section.5}
+\contentsline {subsection}{\numberline {5.1}Telemetry link Experiments}{19}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Video Downlink Experiments}{20}{subsection.5.2}
+\contentsline {section}{\numberline {6}Evaluation and Discussion}{20}{section.6}
+\contentsline {section}{\numberline {7}Further Improvements}{22}{section.7}
+\contentsline {section}{\numberline {8}Conclusion}{23}{section.8}
+\contentsline {section}{\numberline {9}References}{23}{section.9}

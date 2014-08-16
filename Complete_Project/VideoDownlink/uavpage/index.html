@@ -1,0 +1,71 @@
+<html>
+
+<script type="text/javascript">
+
+window.onload = function(){
+    var iframe = document.createElement('iframe');
+    iframe.id = 'iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    iframe.src = 'noofuavs.txt';
+    setTimeout(function(){
+        var text = document.getElementById('iframe').contentDocument.body.firstChild.innerHTML;
+        //document.getElementById("demo").innerHTML = text;
+        var i;
+        var str1="uav";
+        for (i = 0; i <text; i++) {
+        
+        var res=str1.concat(i+1);
+        document.getElementById(res).style.display = "block";
+        }          
+    }, 100);
+}
+
+function fly() {
+ if(document.getElementById) {
+  var planeStyle = document.getElementById("plane").style
+  window.defaultStatus = "("+planeStyle.left+","+planeStyle.top+")"
+  if(parseInt(planeStyle.top) < 10){
+   planeStyle.left = 0
+   planeStyle.top = 400
+  }else{
+   planeStyle.left = parseInt(planeStyle.left) + 1
+   planeStyle.top = parseInt(planeStyle.top) - 0
+  }
+ }else if(document.all) {
+  var planeStyle=window.document.all.plane.style
+  window.defaultStatus = "("+planeStyle.posLeft+","+planeStyle.posTop+")"
+  if(planeStyle.posTop < 10) {
+   planeStyle.posLeft = 0
+   planeStyle.posTop = 400
+  }else{
+   planeStyle.posLeft += 8
+   planeStyle.posTop -= 5
+  }
+ }
+}
+</script>
+
+<head>
+<link rel="stylesheet" type="text/css" href="test2.css" />
+</head>
+<body>
+<p style="font-family:'Helvetica Neue';color:white;font-size:40px; position: absolute;left: 380px; top:20px;">UAVs video streaming</p>
+<img border="0" src="test.jpg" alt=" " width="1280" height="800" onload="setInterval('fly()',10)">
+<div id="plane" style="position:absolute;left:0;top:400;z-index:2">
+<img src="plane.gif">
+</div>
+<a href="#" class="myButton" style="position: absolute; left: 400px; top:100px;display:none"onclick="location.href='http://192.168.0.112/a1.asx'" id="uav1">UAV1</a>
+<a href="#" class="myButton" style="position: absolute;left: 550px; top:100px;display:none" onclick="location.href='http://192.168.0.112/a2.asx'" id="uav2">UAV2</a>
+<a href="#" class="myButton" style="position: absolute;left: 700px; top:100px;display:none" onclick="location.href='http://192.168.0.112/a3.asx'" id="uav3">UAV3</a>
+<a href="#" class="myButton" style="position: absolute;left: 400px; top:200px;display:none" onclick="location.href='http://192.168.0.112/a4.asx'" id="uav4">UAV4</a>
+<a href="#" class="myButton" style="position: absolute;left: 550px; top:200px;display:none" onclick="location.href='http://192.168.0.112/a5.asx'" id="uav5">UAV5</a>
+<a href="#" class="myButton" style="position: absolute;left: 700px; top:200px;display:none" onclick="location.href='http://192.168.0.112/a6.asx'" id="uav6">UAV6</a>
+<a href="#" class="myButton" style="position: absolute;left: 400px; top:300px;display:none" onclick="location.href='http://192.168.0.112/a7.asx'" id="uav7">UAV7</a>
+<a href="#" class="myButton" style="position: absolute;left: 550px; top:300px;display:none" onclick="location.href='http://192.168.0.112/a8.asx'" id="uav8">UAV8</a>
+<a href="#" class="myButton" style="position: absolute; left:700px;top:300px;display:none" onclick="location.href='http://192.168.0.112/a9.asx'" id="uav9" >UAV9</a>
+
+</body>
+</html>
+
+

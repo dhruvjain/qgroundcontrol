@@ -1,0 +1,317 @@
+
+
+/* first server listens to all sources on port iport, so that server sends the port number 1234,1235... 
+to the uavs on which they should send the data to the server.
+Then server listens for client's request (password) on port 8080 , authenticate it and then send him the 
+available number of uavs.
+Then server receives uav id which clients wants to get data of and then using mavproxy command he sends the data to 
+the client at port 14550 (QGCS port).
+
+Assumption: Once Client logs in and start getting data of particular UAV, he can not get data of any other UAV by relogin.
+
+*/
+
+
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+#include <stdlib.h>
+
+#include <sys/socket.h>
+
+#include <netinet/in.h>
+
+#include <arpa/inet.h>
+
+#include <fcntl.h>
+
+#include <termios.h>
+
+#include <sys/ioctl.h>
+
+
+int iport=8000;        // communiction port between uav and server where uav handshakes with the server 
+int client_port=8080;  // port at which server listens to the client for receving password 
+
+
+#define MAVLINK_REMOTE_UDP_PORT 14550 
+
+typedef struct
+{
+	int sock;
+	struct sockaddr_in address;
+	int addr_len;
+} connection_t;
+
+char* uavinfo[10];   // maximum number of uavs assumed =10
+char* command[10];
+char* commandid[20];
+int j;  
+char qgcsport[7]="14550";
+ 
+int no_of_uavs;    // keep record of number of uav's
+char myip[20]="192.168.0.112";  // server's ip
+
+FILE* fp;
+
+void * process(char** c)
+{
+       FILE *fp;
+   
+       printf("In process \n");
+       system("sudo pkill -9 mavproxy.py");
+       //fp=popen("sudo pkill -9 mavproxy.py","r");
+       printf("after killing command \n");
+ 
+       int i=0;
+       printf("c0mmand inside process \n %s\n",c[i]);
+       for(i=0;i<no_of_uavs;i++)
+       { printf("In while \n");
+         if(c[i][0]!='\0')
+         { system(c[i]); 
+          printf("command run ..");
+         }
+       }
+      
+	       
+       pthread_exit(0);
+}
+
+void uavs_to_server(int udp_socket){
+       
+       
+       struct sockaddr_in locAddr,fromAddr;
+
+       memset(&locAddr, 0, sizeof(locAddr));
+       
+      
+       
+      
+       printf("in uavs to server \n");
+       
+      
+      
+      
+       int i=0,n,j;
+      
+       char* rcv_buff;
+       rcv_buff=(char*)malloc(1024*sizeof(char));
+       char* buffer;
+       buffer=(char*)malloc(1024*sizeof(char));
+       int p1=1234;
+       int fromlen=sizeof(struct sockaddr_in);
+       char printbuf[1024];
+
+
+
+       locAddr.sin_family = AF_INET;
+
+       locAddr.sin_addr.s_addr = INADDR_ANY;
+
+
+       locAddr.sin_port = htons(iport);  //iport is the port at which server handshakes with uav to get source ip address and send uav the 
+
+                                         //port at which it should send the data  .
+
+
+       if (udp_socket == -1) {
+
+	       perror("Failed to open udp socket ");
+
+	      pthread_exit(0);
+
+       }
+
+       if (-1 == bind(udp_socket,(struct sockaddr *)&locAddr, sizeof(struct sockaddr)))
+
+        {
+
+	      perror("error bind failed");
+
+	      close(udp_socket);
+
+	      pthread_exit(0);
+       } 
+
+        
+        
+
+	while(1){
+          if(i==1){
+          printf("--%s--\n",uavinfo[0]);
+         }
+         int recSize = recvfrom(udp_socket, rcv_buff, sizeof(rcv_buff),0,(struct sockaddr *)&fromAddr, &fromlen);
+         
+         if(recSize<0)
+       {
+       	 perror("error in receive");
+       }
+         
+         sprintf(buffer, "%d", p1);
+         
+
+        // printf("--%s--\n",buffer);
+         inet_ntop(fromAddr.sin_family, &fromAddr.sin_addr.s_addr, printbuf, sizeof(printbuf));
+
+         //printf("received 0x%x bytes from from %s\n", recSize, printbuf);
+         n=sendto(udp_socket,buffer,strlen(buffer),0,(struct sockaddr *)&fromAddr,fromlen);
+
+        // printf("sending ..%d",n);
+         if(n<0){
+        
+            perror("send to");
+
+         }
+
+         no_of_uavs=1+i; 
+
+        // printf("no. of uavs =%d, i = %d \n",no_of_uavs,i);
+         
+         
+         strcpy(uavinfo[i],myip);
+         
+       
+        // printf("ip of server = %s--\n",uavinfo[i]);
+       
+         strcat(uavinfo[i],":");
+         strcat(uavinfo[i],buffer);
+         strcat(uavinfo[i],"\0");
+        
+         bzero(buffer,1024);
+         p1++;
+         i++;
+      }
+
+}
+ 
+int main(int argc, char ** argv)
+{
+	int sock = -1,n,j,i;
+	struct sockaddr_in addres,from;
+	int port;
+	connection_t * connection;
+	pthread_t thread;
+        char buf[1024];
+        char uavnum[4];
+        char printbuff[INET_ADDRSTRLEN];
+        FILE* fp;
+        pthread_t mainthread;
+
+	for(j=0;j<10;j++)
+         {uavinfo[j]=(char*)malloc(100*sizeof(char));
+         command[j]=(char*)malloc(200*sizeof(char));
+         command[j][0]='\0';
+         }
+         for(i=0;i<20;i++){
+           commandid[i]=(char*)malloc(512*sizeof(char));
+           commandid[i][0]='\0';
+	}
+        
+	/* create socket */
+        sock=socket(AF_INET,SOCK_DGRAM,0);
+        printf("%d \n",sock);
+	if (sock <= 0)
+	{
+		fprintf(stderr, "%s: error: cannot create socket\n", argv[0]);
+		return -3;
+	}
+
+	/* bind socket to port */
+	addres.sin_family = AF_INET;
+	addres.sin_addr.s_addr = INADDR_ANY;
+	addres.sin_port = htons(client_port);
+	if (bind(sock, (struct sockaddr *)&addres, sizeof(struct sockaddr_in)) < 0)
+	{
+		fprintf(stderr, "%s: error: cannot bind socket to port %d\n", argv[0], port);
+		return -4;
+	}
+
+	
+	printf("%s: ready and listening\n", argv[0]);
+        int udp_socket = socket(AF_INET, SOCK_DGRAM, 0);  // socket for receiving request from source
+        
+        pthread_create(&mainthread, 0, uavs_to_server, (void *) udp_socket);
+        pthread_detach(mainthread);
+       
+        int fromlen=sizeof(struct sockaddr_in);
+        int id;
+       
+	while (1)
+	{
+                
+		/* accept incoming connections */
+		connection = (connection_t *)malloc(sizeof(connection_t));
+                connection->sock=sock;
+		printf("listening from client .. \n");
+		n=recvfrom(sock,buf,1024,0,(struct sockadd*)&from, &fromlen);
+                write(1,buf,n);
+               
+                if (n<= 0)
+		{
+			free(connection);
+		}
+		
+                if(!(buf[0]=='p' && buf[1]=='a' && buf[2]=='s' && buf[3]=='s' && buf[4]=='w' && buf[5]=='o' && buf[6]=='r' && buf[7]=='d'))
+               {
+                continue;
+               }
+            
+            
+             printf("Correct password received \n");
+	     bzero(buf,1024);
+             connection->address=from;
+             connection->addr_len=fromlen;
+             bzero(uavnum,4);
+             sprintf(uavnum, "%d", no_of_uavs);
+            
+             n=sendto(sock,uavnum,strlen(uavnum),0,(struct sockaddr *)&from,fromlen);   // sending no. of uavs to client
+             n=recvfrom(sock,buf,1024,0,(struct sockadd*)&from,&fromlen);            // receiving which uav client wants 
+
+            
+             inet_ntop(from.sin_family, &from.sin_addr.s_addr, printbuff, sizeof(printbuff));  
+                          
+
+             id=atoi(buf);
+          
+            
+             
+             if(command[id-1][0]=='\0'){
+             
+             strcpy(command[id-1],"sudo mavproxy.py --master=");
+            
+             strcat(command[id-1],uavinfo[id-1]);
+             
+             //printf("No seg fault");
+             strcat(command[id-1]," --baud=57600 --out ");
+             strcat(command[id-1],printbuff);
+            
+             strcat(command[id-1],":");
+             strcat(command[id-1],qgcsport);
+             printf("command =====%s",command[id-1]);
+            
+            }
+            else{
+             
+           
+             strcat(command[id-1]," --out ");
+             strcat(command[id-1],printbuff);    
+             strcat(command[id-1],":");
+             strcat(command[id-1],qgcsport);
+             printf("command =====%s",command[id-1]);
+            
+          
+           }
+
+	    pthread_create(&thread, 0, (void *)process, (void *) command);
+            pthread_detach(thread);
+            memset(&from, 0, sizeof(from));
+		
+	}
+	
+	return 0;
+}
+
